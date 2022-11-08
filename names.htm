@@ -1,0 +1,169 @@
+<html>
+<script language="javascript">
+var names = [];
+var buddies = [];
+var nametext = '';
+var buddytext = '';
+
+function quickmessage(themessage){
+document.getElementById('quicktips').innerHTML = themessage;
+}
+
+function deletename(index){
+var thename = names[index];
+var temp = names.slice();
+temp.splice(index, 1);
+startover();
+for(i=0;i<temp.length;i++){
+addname(temp[i]);
+}
+quickmessage(thename + ' was removed from the list');
+}
+
+function addname(newname){
+if(!(newname == '')){
+names[names.length] = newname;
+newname = '<a href=' + '"' + 'javascript:deletename(' + "'" + (names.length - 1) + "'" + ')' + '"  ' + 'style=' + '"' + 'text-decoration:none; color:#666666' + '"' + 'onmouseover=' + '"' + 'quickmessage(' + "'" + 'click to remove ' + newname + ' from the list' + "')" + '" ' + 'onmouseout=' + '"' + 'quickmessage(' + "'" + "')" + '"' + '>' + newname + '</a>';
+nametext = nametext + newname + '<br>';
+document.getElementById('inname').value = '';
+document.getElementById('thenames').innerHTML = nametext;
+document.getElementById('peeps').innerHTML = '';
+document.getElementById('thegets').innerHTML = '';
+}
+movecursor();
+}
+
+function startover(){
+document.getElementById('thenames').innerHTML = '';
+document.getElementById('thegets').innerHTML = '';
+document.getElementById('peeps').innerHTML = '';
+names = [];
+nametext = '';
+buddytext = '';
+buddies = [];
+movecursor();
+}
+
+
+function randomize(){
+var endpoint = names.length;
+var temp = [];
+temp = names.slice();
+var index = 0;
+var buddytext = '';
+document.getElementById('thegets').innerHTML = '';
+for(i=0;i < endpoint; i++){
+document.getElementById('thegets').innerHTML = document.getElementById('thegets').innerHTML + 'gets' + '<br>';
+index = Math.floor(Math.random()*temp.length);
+if(names[i] == temp[index]){
+index = (index + 1) % temp.length;
+}
+buddies[i] = temp[index];
+buddytext = buddytext + buddies[i] + '<br>';
+temp.splice(index, 1);
+}
+document.getElementById('peeps').innerHTML = buddytext;
+movecursor();
+}
+
+function checkkey(thekeycode){
+if(thekeycode == 13){
+addname(document.getElementById('inname').value, 'thenames');
+}
+}
+
+ function delete_cookie ( cookie_name )
+{
+  var cookie_date = new Date ( );  // current date & time
+  cookie_date.setTime ( cookie_date.getTime() - 1 );
+  document.cookie = cookie_name += "=; expires=" + cookie_date.toGMTString();
+}
+
+function savedata() {
+ delete_cookie('christmasnames');
+ var today = new Date();
+ var expire = new Date();
+ expire.setTime(today.getTime() + 3600000*24*366);
+ document.cookie = "christmasnames"+"="+escape(names) + ";expires="+expire.toGMTString();
+ movecursor();
+}
+
+function getsaveddata(){
+var newdata;
+var thenewnames;
+if(document.cookie){
+newdata = unescape(document.cookie);
+if(newdata != null && newdata != ""){
+var datapos = newdata.indexOf('christmasnames')
+datapos += 15;
+newdata = newdata.substring(datapos, newdata.length);
+thenewnames=newdata.split(',');
+}
+startover();
+for(i=0;i < thenewnames.length; i++){
+addname(thenewnames[i]);
+}
+}
+movecursor();
+}
+
+function movecursor(){document.getElementById('inname').focus();}
+
+</script>
+<body onload="getsaveddata(); movecursor()">
+<br><br><br>
+<font face="verdana" color="#666666" style="font-size:12px">
+<center>
+The purpose of this program is to randomly<br>
+assign people to buy Christmas presents for people.<br>
+Enter names into the text box and press the add key or hit enter.<br>
+To randomly assign names, press assign.<br>
+That's it! enjoy!
+</center>
+</font>
+<br><br><br>
+<table align="center" bgcolor="#EEEFFF" style="border-style:solid; border-color:#DDDDEE; border-width:3px; -moz-border-radius:12px" >
+<td>
+<font face="verdana" color="#669966" style="font-size:12px">
+<center>
+<input type="textbox" style="font-size:12px" width="50" id="inname" onkeyup="checkkey(event.keyCode)"><br>
+<a href="javascript:addname(inname.value)" style="color:#666666; text-decoration:none" onmouseover="quickmessage('Click this to add names from the textbox to the list.')" onmouseout="quickmessage('')">add</a>
+<a href="javascript:randomize()" style="color:#666666; text-decoration:none" onmouseover="quickmessage('Click this to randomly assign names from the list to the other names in the list.')" onmouseout="quickmessage('')">assign</a>
+<a href="javascript:startover()" style="color:#666666; text-decoration:none" onmouseover="quickmessage('Click this to delete all names and start over.')" onmouseout="quickmessage('')">clear</a>
+<a href="javascript:savedata()" style="color:#666666; text-decoration:none" onmouseover="quickmessage('Click this to save these results to this computer.<br> These names will apear the next time this page is opened.')" onmouseout="quickmessage('')" onclick="quickmessage('This list was saved to this computer')">save</a>
+<a href="javascript:getsaveddata()" style="color:#666666; text-decoration:none" onmouseover="quickmessage('click this to load any saved results into the program.')" onmouseout="quickmessage('')">get</a>
+</center>
+</font>
+<table border="0">
+<tr>
+<td width="50">
+<font face="verdana" color="#666666" style="font-size:12px; text-decoration:none">
+<center>
+<span id="thenames"></span>
+</center>
+</font>
+</td>
+<td width="50">
+<font face="verdana" color="#777777" style="font-size:12px">
+<center>
+<span id="thegets"></span>
+</center>
+</font>
+</td>
+<td width="50">
+<font face="verdana" color="#666666" style="font-size:12px">
+<center>
+<span id="peeps"></span>
+</center>
+</font>
+</td>
+</tr>
+</table>
+</td>
+</table>
+<center>
+<br>
+<span id="quicktips" style="font-family:verdana; color:#999999; font-size:12px">Hover over any element to see a description.</span>
+</center>
+</body>
+</html>
